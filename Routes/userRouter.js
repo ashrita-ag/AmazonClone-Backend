@@ -9,10 +9,9 @@ router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: "Email already exists" });
+    if (user) return res.json({ msg: "Email already exists" });
 
-    if (password.length < 6)
-      return res.status(400).json({ msg: "Password too short" });
+    if (password.length < 6) return res.json({ msg: "Password too short" });
 
     const passwordHash = await bcrypt.hash(password, 10);
     const [Fname, Lname] = name.split(" ");
@@ -37,19 +36,18 @@ router.post("/register", async (req, res) => {
 
     return res.json({ newUser, accesstoken });
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    return res.json({ msg: err.message });
   }
 });
 
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "Email does not exits" });
+    const user = await User.findOne({ email: email });
+    if (!user) return res.json({ msg: "Email does not exists" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Incorrect Password" });
+    if (!isMatch) res.json({ msg: "Incorrect Password" });
 
     const accesstoken = createAccessToken({ id: user._id });
     const refreshtoken = createRefreshToken({ id: user._id });
@@ -59,9 +57,9 @@ router.post("/login", async (req, res) => {
       path: "/user/token",
     });
 
-    return res.json({ accesstoken, id: user._id });
+    res.json({ accesstoken, id: user._id });
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    res.json({ msg: err.message });
   }
 });
 
@@ -72,23 +70,22 @@ router.get("/info", auth, async (req, res) => {
     return res.json({ curentUser });
     // res.json(req.user);
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    res.json({ msg: err.message });
   }
 });
 
 router.get("/token", (req, res) => {
   try {
     const rf_token = req.cookies.refreshtoken;
-    if (!rf_token)
-      return res.status(400).json({ msg: "plz Login or register" });
+    if (!rf_token) return res.json({ msg: "plz Login or register" });
 
     jwt.verify(rf_token, process.env.REFRESH_TOKEN, (err, user) => {
-      if (err) return res.status(500).json({ msg: "Login or register" });
+      if (err) return res.json({ msg: "Login or register" });
       const accesstoken = createAccessToken({ id: user._id });
       return res.json({ user, accesstoken });
     });
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    return res.json({ msg: err.message });
   }
 });
 
@@ -97,7 +94,7 @@ router.get("/logout", async (req, res) => {
     res.clearCookie("refreshtoken", { path: "/user/token" });
     return res.json({ msg: "logout success" });
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    return res.json({ msg: err.message });
   }
 });
 
