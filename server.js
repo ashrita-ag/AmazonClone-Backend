@@ -24,7 +24,9 @@ mongoose.connect(
   }
 );
 
+
 app.use("/user", require("./Routes/userRouter"));
+app.use("/product", require("./Routes/productRouter"));
 
 const PORT = process.env.BPORT || 5000;
 app.listen(PORT, () => {

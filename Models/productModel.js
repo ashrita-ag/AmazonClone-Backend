@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// const data = require("../data");
 
 const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -6,7 +7,11 @@ const productSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   price: { type: Number, required: true },
   category: { type: Number, required: true },
-  checked: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
+// Product.insertMany(data.productsHome, (err) => console.log(err));
+// Product.insertMany(data.productsNew, (err) => console.log(err));
+
+
+module.exports = Product;
