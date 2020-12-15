@@ -15,4 +15,19 @@ router.get("/cat/:id", (req, res) => {
   }
 });
 
+router.get("/detail/:id", (req, res) => {
+  try {
+    Product.findById(req.params.id, (err, found) => {
+      if (err) {
+        res.json({ msg: err.message });
+      } else {
+        res.json(found);
+      }
+    });
+    // res.json("hi");
+  } catch (err) {
+    res.json({ msg: err.message });
+  }
+});
+
 module.exports = router;
