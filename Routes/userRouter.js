@@ -30,11 +30,11 @@ router.post("/register", async (req, res) => {
     const refreshtoken = createRefreshToken({ id: newUser._id });
 
     res.cookie("refreshtoken", refreshtoken, {
-      httpsOnly: true,
+      httpOnly: false,
       path: "/user/token",
     });
 
-    return res.json({ newUser, accesstoken });
+    return res.json({ accesstoken }); //newUser
   } catch (err) {
     return res.json({ msg: err.message });
   }
@@ -97,7 +97,7 @@ router.get("/logout", async (req, res) => {
     res.clearCookie("refreshtoken", { path: "/user/token" });
     return res.json({ msg: "logout success" });
   } catch (err) {
-    return res.json({ msg: err.message });
+    return res.json({ err: err.message });
   }
 });
 
