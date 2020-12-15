@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
     const refreshtoken = createRefreshToken({ id: user._id });
 
     res.cookie("refreshtoken", refreshtoken, {
-      httpsOnly: true,
+      httpOnly: false,
       path: "/user/token",
     });
 
@@ -65,10 +65,10 @@ router.post("/login", async (req, res) => {
 
 router.get("/info", auth, async (req, res) => {
   try {
+
     const curentUser = await User.findById(req.user.id).select("-password");
     if (!curentUser) return res.json({ msg: "User does not exists" });
-    return res.json({ curentUser });
-    // res.json(req.user);
+    return res.json(curentUser );
   } catch (err) {
     res.json({ msg: err.message });
   }
@@ -77,12 +77,15 @@ router.get("/info", auth, async (req, res) => {
 router.get("/token", (req, res) => {
   try {
     const rf_token = req.cookies.refreshtoken;
+    // return res.json(req.cookies);
     if (!rf_token) return res.json({ msg: "plz Login or register" });
 
     jwt.verify(rf_token, process.env.REFRESH_TOKEN, (err, user) => {
       if (err) return res.json({ msg: "Login or register" });
-      const accesstoken = createAccessToken({ id: user._id });
-      return res.json({ user, accesstoken });
+
+      const accesstoken = createAccessToken({ id: user.id });
+      // res.json(accesstoken);
+      return res.json({accesstoken });
     });
   } catch (err) {
     return res.json({ msg: err.message });

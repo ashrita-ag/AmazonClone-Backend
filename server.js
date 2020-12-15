@@ -7,9 +7,12 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin:true,
+  credentials:true,
+  preflightContinue:true,
+}));
 
-// app.use(cors());
 
 mongoose.connect(
   process.env.MONGODB_URL,
