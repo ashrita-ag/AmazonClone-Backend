@@ -10,15 +10,9 @@ router.get("/cat/:id", (req, res) => {
         res.json(docs);
       }
     });
-
-    // res.json("HI");
   } catch (err) {
     res.json({ msg: err.message });
   }
 });
-
-// router.get("/cat2", (req, res) => {});
-
-// router.get("/cat3", (req, res) => {});
 
 module.exports = router;

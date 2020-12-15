@@ -7,12 +7,13 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin:true,
-  credentials:true,
-  preflightContinue:true,
-}));
-
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    preflightContinue: true,
+  })
+);
 
 mongoose.connect(
   process.env.MONGODB_URL,
@@ -20,6 +21,7 @@ mongoose.connect(
     useUnifiedTopology: true,
     useCreateIndex: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
   },
   (err) => {
     if (err) console.log(err);
@@ -27,9 +29,9 @@ mongoose.connect(
   }
 );
 
-
 app.use("/user", require("./Routes/userRouter"));
 app.use("/product", require("./Routes/productRouter"));
+app.use("/user", require("./Routes/cartRouter"));
 
 const PORT = process.env.BPORT || 5000;
 app.listen(PORT, () => {
