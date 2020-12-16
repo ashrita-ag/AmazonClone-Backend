@@ -34,4 +34,20 @@ router.patch("/cart/delete", auth, (req, res) => {
   }
 });
 
+router.patch("/cart/update", auth, (req, res) => {
+  try {
+    User.findOneAndUpdate(
+      { _id: req.user.id, "cart._id": req.body.product },
+      { $set: { "cart.$.count": req.body.count } },
+      { new: true },
+      (err, foundUser) => {
+        if (err) return res.json(err);
+        else return res.json(foundUser.cart);
+      }
+    );
+  } catch (err) {
+    return res.json({ msg: err.message });
+  }
+});
+
 module.exports = router;
