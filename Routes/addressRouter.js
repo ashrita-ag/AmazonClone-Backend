@@ -28,4 +28,17 @@ router.post("/save", auth, async (req, res) => {
   }
 });
 
+router.post("/delete", auth, (req, res) => {
+  try {
+    Address.findOneAndDelete({_id:req.body.id},(err,found)=>{
+      if (err) res.json(err);
+      else res.json(found);
+    })
+  } catch (err) {
+    return res.json({ msg: err.message });
+  }
+});
+
+
+
 module.exports = router;
