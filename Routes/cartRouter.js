@@ -2,7 +2,7 @@ const router = require("express").Router();
 const auth = require("../Middleware/auth");
 const User = require("../Models/userModel");
 
-router.patch("/cart/add", auth, (req, res) => {
+router.patch("/add", auth, (req, res) => {
   try {
     User.findOneAndUpdate(
       { _id: req.user.id },
@@ -18,7 +18,7 @@ router.patch("/cart/add", auth, (req, res) => {
   }
 });
 
-router.patch("/cart/delete", auth, (req, res) => {
+router.patch("/delete", auth, (req, res) => {
   try {
     User.findOneAndUpdate(
       { _id: req.user.id },
@@ -34,7 +34,7 @@ router.patch("/cart/delete", auth, (req, res) => {
   }
 });
 
-router.patch("/cart/update", auth, (req, res) => {
+router.patch("/update", auth, (req, res) => {
   try {
     User.findOneAndUpdate(
       { _id: req.user.id, "cart._id": req.body.product },
