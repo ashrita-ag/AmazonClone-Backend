@@ -6,11 +6,11 @@ const addressSchema = new mongoose.Schema({
   phone: { type: Number, required: true },
   pin: { type: Number, required: true },
   house: { type: String, required: true },
-  area: { type: String},
+  area: { type: String },
   landmark: { type: String },
   city: { type: String, required: true },
   state: { type: String, required: true },
-  country: { type: String, required: true },
+  country: { type: String, default: "India" },
 });
 
 const Address = mongoose.model("Address", addressSchema);
