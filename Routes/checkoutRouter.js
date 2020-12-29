@@ -1,31 +1,31 @@
 const router = require("express").Router();
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const auth = require("../Middleware/auth");
+const Delivery = require("../Models/deliveryModel");
 
-const Stripe = require("stripe");
-const stripe = Stripe(
-  "sk_test_51Hz0IIKQyTwAQr5fjZHZuulQRoLm0SD9iLbQ92tMOnS1Kdfy1mhaRQKLOJHAfvSPRJdUHOk9ULxQZZ6HjClgkcz100vcUCUt4h"
-);
+router.post("/create-payment-intent", auth, async (req, res) => {
+  Delivery.findOne({ user: req.user.id }, async (err, found) => {
+    if (err) {
+      console.log(req.user);
+    }
+    const { cost, gift, speed} = found;
+    const g = gift ? 25 : 0;
+    const d = speed ? speed : cost >= 500 ? 0 : 40;
 
-router.post("/create-checkout-session", async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "T-shirt",
-          },
-          unit_amount: 2000,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: "http://localhost:3000/success",
-    cancel_url: "http://localhost:3000/cancel",
+    const f = cost + g + d;
+    console.log(found);
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: f * 100,
+      currency: "inr",
+    });
+
+    console.log(paymentIntent.client_secret);
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntent: paymentIntent,
+    });
   });
-
-  res.json({ id: session.id });
 });
 
 module.exports = router;
