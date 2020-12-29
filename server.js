@@ -33,9 +33,9 @@ app.use("/user", require("./Routes/userRouter"));
 app.use("/product", require("./Routes/productRouter"));
 app.use("/user/cart", require("./Routes/cartRouter"));
 app.use("/address", require("./Routes/addressRouter"));
-app.use("/delivery",require("./Routes/deliveryRouter"))
-app.use("/checkout",require("./Routes/checkoutRouter"))
-
+app.use("/delivery", require("./Routes/deliveryRouter"));
+app.use("/checkout", require("./Routes/checkoutRouter"));
+// app.use("/order", require("./Routes/checkoutRouter"));
 
 const PORT = process.env.BPORT || 5000;
 app.listen(PORT, () => {
