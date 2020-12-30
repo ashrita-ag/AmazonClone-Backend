@@ -6,6 +6,9 @@ const deliverySchema = new mongoose.Schema({
   address: { type: mongoose.Mixed, default: {} },
   speed: { type: Number, default: 0 },
   cost: { type: Number, default: 0 },
+  finalcost: { type: Number, default: 0 },
+  cart: { type: Array, default: [] },
+  status: { type: Boolean, default: false }, //false:in process True:success
 });
 
 module.exports = mongoose.model("Delivery", deliverySchema);
