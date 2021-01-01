@@ -3,32 +3,6 @@ const auth = require("../Middleware/auth");
 const Delivery = require("../Models/deliveryModel");
 const User = require("../Models/userModel");
 
-// router.post("/update", auth, (req, res) => {
-//   try {
-//     Delivery.findOneAndUpdate(
-//       { user: req.user.id, status: false },
-//       { $set: req.body },
-//       { new: true },
-//       (err, found) => {
-//         if (err) return res.json(err);
-//         const { cart, speed, gift } = found;
-//         const cost = updateCost(cart);
-//         const finalcost = updateFinalCost(gift, speed, cost);
-//         found.updateOne(
-//           { $set: { cost: cost, finalcost: finalcost } },
-//           { new: true },
-//           (err, docs) => {
-//             if (err) return res.json(err);
-//             else return res.json(docs);
-//           }
-//         );
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ msg: err.message });
-//   }
-// });
-
 router.post("/update_speed", auth, (req, res) => {
   try {
     Delivery.findOneAndUpdate(
@@ -70,6 +44,31 @@ router.post("/update_payment", auth, (req, res) => {
       { new: true },
       (err, found) => {
         if (err) return res.json(err);
+        res.json(found);
+      }
+    );
+  } catch (err) {
+    return res.json({ msg: err.message });
+  }
+});
+
+router.post("/update_cart", auth, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.user.id });
+    const userCart = user.cart;
+
+    Delivery.findOneAndUpdate(
+      { user: req.user.id, status: false },
+      {
+        $set: { cart: userCart },
+      },
+      {
+        new: true,
+      },
+      (err, found) => {
+        if (err) res.json(err);
+        found.cost = updateCost(found.cart);
+        found.finalcost = updateFinalCost(found.gift, found.speed, found.cost);
         res.json(found);
       }
     );
