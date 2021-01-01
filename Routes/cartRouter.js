@@ -50,4 +50,20 @@ router.patch("/update", auth, (req, res) => {
   }
 });
 
+router.patch("/delete_cart", auth, (req, res) => {
+  try {
+    User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $set: { cart: [] } },
+      { new: true },
+      (err, foundUser) => {
+        if (err) return res.json(err);
+        else return res.json(foundUser);
+      }
+    );
+  } catch (err) {
+    return res.json({ msg: err.message });
+  }
+});
+
 module.exports = router;
