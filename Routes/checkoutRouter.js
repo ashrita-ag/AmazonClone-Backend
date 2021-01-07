@@ -4,28 +4,47 @@ const auth = require("../Middleware/auth");
 const Delivery = require("../Models/deliveryModel");
 
 router.post("/create-payment-intent", auth, async (req, res) => {
-  Delivery.findOne({ user: req.user.id }, async (err, found) => {
-    if (err) {
-      console.log(req.user);
-    }
-    const { cost, gift, speed } = found;
-    const g = gift ? 25 : 0;
-    const d = speed ? speed : cost >= 500 ? 0 : 40;
-
-    const f = cost + g + d;
-    // console.log(found);
-
+  try {
+    const found = await Delivery.findOne({ user: req.user.id, status: false });
+    const { finalcost } = found;
+    
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: f * 100,
+      amount: finalcost * 100,
       currency: "inr",
     });
 
-    // console.log(paymentIntent.client_secret);
-    res.json({
+    return res.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntent: paymentIntent,
     });
-  });
+  } catch (err) {
+    res.json({ errorMsg: err });
+  }
 });
+
+// router.post("/create-payment-intent", auth, async (req, res) => {
+//   Delivery.findOne({ user: req.user.id }, async (err, found) => {
+//     if (err) {
+//       console.log(req.user);
+//     }
+//     const { cost, gift, speed } = found;
+//     const g = gift ? 25 : 0;
+//     const d = speed ? speed : cost >= 500 ? 0 : 40;
+
+//     const f = cost + g + d;
+//     // console.log(found);
+
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: f * 100,
+//       currency: "inr",
+//     });
+
+//     // console.log(paymentIntent.client_secret);
+//     res.json({
+//       clientSecret: paymentIntent.client_secret,
+//       paymentIntent: paymentIntent,
+//     });
+//   });
+// });
 
 module.exports = router;

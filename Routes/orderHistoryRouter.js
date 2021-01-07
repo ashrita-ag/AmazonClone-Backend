@@ -8,9 +8,9 @@ router.get("/history", auth, async (req, res) => {
       user: req.user.id,
       status: true,
     }).sort({ createdAt: -1 });
-    res.json(foundOrders);
+    return res.json(foundOrders);
   } catch (err) {
-    return res.json({ msg: err.message });
+    return res.json({ errorMsg: err.message });
   }
 });
 
