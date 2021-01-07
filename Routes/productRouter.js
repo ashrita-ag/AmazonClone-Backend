@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Product = require("../Models/ProductModel");
+const Product = require("../Models/productModel");
 
 router.get("/cat/:id", async (req, res) => {
   try {
