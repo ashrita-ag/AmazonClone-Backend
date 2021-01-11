@@ -22,38 +22,29 @@ router.post("/update_speed", auth, async (req, res) => {
 
 router.post("/update_address", auth, async (req, res) => {
   try {
-    const existing = await Delivery.findOne({
+    await Delivery.deleteMany({
       user: req.user.id,
       status: false,
     });
 
-    if (existing) {
-      const found = await Delivery.findOneAndUpdate(
-        { _id: existing._id },
-        { $set: req.body },
-        { new: true }
-      );
-      return res.json(found);
-    } else {
-      const userCart = await User.findById(req.user.id).select("cart");
-      if (!userCart.length)
-        return res.json({ errorMsg: "Cart cannot be empty" });
+    const user = await User.findById(req.user.id);
+    const userCart = user.cart;
+    if (!userCart.length) return res.json({ errorMsg: "Cart cannot be empty" });
 
-      const cost = updateCost(userCart);
-      const finalcost = updateFinalCost(req.body.gift, 0, cost);
+    const cost = updateCost(userCart);
+    const finalcost = updateFinalCost(req.body.gift, 0, cost);
 
-      const newDelivery = new Delivery({
-        user: req.user.id,
-        gift: req.body.gift,
-        cart: userCart,
-        cost: cost,
-        finalcost: finalcost,
-        address: req.body.address,
-      });
+    const newDelivery = new Delivery({
+      user: req.user.id,
+      gift: req.body.gift,
+      cart: userCart,
+      cost: cost,
+      finalcost: finalcost,
+      address: req.body.address,
+    });
 
-      await newDelivery.save();
-      return res.json(newDelivery);
-    }
+    await newDelivery.save();
+    return res.json(newDelivery);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
