@@ -28,7 +28,8 @@ router.post("/save", auth, async (req, res) => {
 router.post("/delete", auth, async (req, res) => {
   try {
     const found = await Address.findOneAndDelete({ _id: req.body.id });
-    return res.json(found);
+    if (!found) return res.json({ errorMsg: "No such Address Found" });
+    else return res.json(found);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }

@@ -10,7 +10,8 @@ router.patch("/add", auth, async (req, res) => {
       { $push: req.body },
       { new: true }
     );
-    return res.json(foundUser.cart);
+    if (!foundUser) return res.json({ errorMsg: "No such Item Found" });
+    else return res.json(foundUser.cart);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
