@@ -21,33 +21,4 @@ router.get("/detail/:id", async (req, res) => {
   }
 });
 
-// router.get("/cat/:id", (req, res) => {
-//   try {
-//     Product.find({ category: req.params.id }, (err, docs) => {
-//       if (err) {
-//         res.json({ errorMsg: err.message });
-//       } else {
-//         res.json(docs);
-//       }
-//     });
-//   } catch (err) {
-//     res.json({ errorMsg: err.message });
-//   }
-// });
-
-// router.get("/detail/:id", (req, res) => {
-//   try {
-//     Product.findById(req.params.id, (err, found) => {
-//       if (err) {
-//         res.json({ errorMsg: err.message });
-//       } else {
-//         res.json(found);
-//       }
-//     });
-//     // res.json("hi");
-//   } catch (err) {
-//     res.json({ errorMsg: err.message });
-//   }
-// });
-
 module.exports = router;

@@ -47,19 +47,6 @@ router.patch("/add_cart", auth, async (req, res) => {
   }
 }); //test this
 
-router.patch("/delete", auth, async (req, res) => {
-  try {
-    const foundUser = await User.findOneAndUpdate(
-      { _id: req.user.id },
-      { $pull: req.body },
-      { new: true }
-    );
-    return res.json(foundUser.cart);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
-  }
-});
-
 router.patch("/update", auth, async (req, res) => {
   try {
     const foundUser = await User.findOneAndUpdate(
@@ -67,7 +54,12 @@ router.patch("/update", auth, async (req, res) => {
       { $set: { "cart.$.count": req.body.count } },
       { new: true }
     );
-    return res.json(foundUser.cart);
+    const finalCart = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $pull: { cart: { count: { $lte: 0 } } } },
+      { new: true }
+    );
+    return res.json(finalCart.cart);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
@@ -102,52 +94,5 @@ router.patch("/delete_cart", auth, async (req, res) => {
 //   }
 // });
 
-// router.patch("/delete", auth, (req, res) => {
-//   try {
-//     User.findOneAndUpdate(
-//       { _id: req.user.id },
-//       { $pull: req.body },
-//       { new: true },
-//       (err, foundUser) => {
-//         if (err) return res.json(err);
-//         else return res.json(foundUser.cart);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ msg: err.message });
-//   }
-// });
-
-// router.patch("/update", auth, (req, res) => {
-//   try {
-//     User.findOneAndUpdate(
-//       { _id: req.user.id, "cart._id": req.body.product },
-//       { $set: { "cart.$.count": req.body.count } },
-//       { new: true },
-//       (err, foundUser) => {
-//         if (err) return res.json(err);
-//         else return res.json(foundUser.cart);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ msg: err.message });
-//   }
-// });
-
-// router.patch("/delete_cart", auth, (req, res) => {
-//   try {
-//     User.findOneAndUpdate(
-//       { _id: req.user.id },
-//       { $set: { cart: [] } },
-//       { new: true },
-//       (err, foundUser) => {
-//         if (err) return res.json(err);
-//         else return res.json(foundUser);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ msg: err.message });
-//   }
-// });
 
 module.exports = router;
