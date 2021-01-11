@@ -3,7 +3,7 @@ const auth = require("../Middleware/auth");
 const Delivery = require("../Models/deliveryModel");
 const User = require("../Models/userModel");
 
-router.post("/update_speed", auth, async (req, res) => {
+router.patch("/update_speed", auth, async (req, res) => {
   try {
     const found = await Delivery.findOneAndUpdate(
       { user: req.user.id, status: false },
