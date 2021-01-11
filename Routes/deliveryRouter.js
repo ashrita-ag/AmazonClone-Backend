@@ -13,6 +13,7 @@ router.post("/update_speed", auth, async (req, res) => {
 
     const { gift, speed, cost } = found;
     found.finalcost = updateFinalCost(gift, speed, cost);
+    await found.save();
     return res.json(found);
   } catch (err) {
     return res.json({ errorMsg: err.message });
@@ -47,7 +48,9 @@ router.post("/update_address", auth, async (req, res) => {
         cart: userCart,
         cost: cost,
         finalcost: finalcost,
+        address: req.body.address,
       });
+
       await newDelivery.save();
       return res.json(newDelivery);
     }
