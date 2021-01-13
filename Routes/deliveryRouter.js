@@ -51,15 +51,22 @@ router.post("/update_address", auth, async (req, res) => {
   }
 });
 
-router.get("/update_payment", auth, async (req, res) => {
+router.post("/update_payment", auth, async (req, res) => {
   try {
+    const foundUser = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $set: { cart: [] } },
+      { new: true }
+    );
+    if (!foundUser) return res.json({ errorMsg: "No such User Found" });
+
     const found = await Delivery.findOneAndUpdate(
       { user: req.user.id, status: false },
       { $set: { status: true } },
       { new: true }
     );
     if (!found) return res.json({ errorMsg: "No delivey for this user" });
-    else return res.json(found);
+    else return res.json({ found, foundUser });
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
