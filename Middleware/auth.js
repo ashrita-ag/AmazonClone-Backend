@@ -5,12 +5,12 @@ const auth = (req, res, next) => {
     const token = req.header("Authorization");
     if (!token)
       return res.json({
-        errorMsg: "Invalid Authentication.Please Login Again.",
+        errorMsg: "Invalid Authentication",
       });
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
       if (err)
         return res.json({
-          errorMsg: "Invalid Authentication.Please Login Again.",
+          errorMsg: "Invalid Authentication",
         });
       req.user = user;
       next();
