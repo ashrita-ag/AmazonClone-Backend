@@ -7,16 +7,16 @@ const auth = (req, res, next) => {
       return res.json({
         errorMsg: "Invalid Authentication",
       });
-    jwt.verify(token, process.env.ACCESS_TOKEN, (err, user) => {
-      if (err)
+    jwt.verify(token, process.env.ACCESS_TOKEN, (e, user) => {
+      if (e)
         return res.json({
           errorMsg: "Invalid Authentication",
         });
       req.user = user;
       next();
     });
-  } catch (err) {
-    res.json({ errorMsg: err.mesage });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 };
 

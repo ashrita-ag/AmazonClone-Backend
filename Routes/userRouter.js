@@ -34,8 +34,8 @@ router.post("/register", async (req, res) => {
     });
 
     return res.json({ accesstoken });
-  } catch (err) {
-    return res.json({ errorMsg: err });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
@@ -57,8 +57,8 @@ router.post("/login", async (req, res) => {
     });
 
     return res.json({ accesstoken, id: user._id });
-  } catch (err) {
-    return res.json({ errorMsg: err });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
@@ -67,8 +67,8 @@ router.get("/info", auth, async (req, res) => {
     const curentUser = await User.findById(req.user.id).select("-password");
     if (!curentUser) return res.json({ errorMsg: "User does not exists" });
     return res.json(curentUser);
-  } catch (err) {
-    res.json({ errorMsg: err.message });
+  } catch (e) {
+    res.json({ errorMsg: e.message });
   }
 });
 
@@ -77,23 +77,23 @@ router.get("/token", (req, res) => {
     const rf_token = req.cookies.refreshtoken;
     if (!rf_token) return res.json({ errorMsg: "Please Login or register" });
 
-    jwt.verify(rf_token, process.env.REFRESH_TOKEN, (err, user) => {
-      if (err) return res.json({ errorMsg: "Login or register" });
+    jwt.verify(rf_token, process.env.REFRESH_TOKEN, (e, user) => {
+      if (e) return res.json({ errorMsg: "Login or register" });
 
       const accesstoken = createAccessToken({ id: user.id });
       return res.json({ accesstoken });
     });
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
-router.get("/logout", (req, res) => {
+router.get("/logout", (_, res) => {
   try {
     res.clearCookie("refreshtoken", { path: "/user/token" });
     return res.json({ msg: "logout success" });
-  } catch (err) {
-    return res.json({ errorMsg: err });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 

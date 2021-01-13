@@ -9,8 +9,8 @@ router.get("/history", auth, async (req, res) => {
       status: true,
     }).sort({ createdAt: -1 });
     return res.json(foundOrders);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 

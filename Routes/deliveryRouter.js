@@ -16,8 +16,8 @@ router.patch("/update_speed", auth, async (req, res) => {
     found.finalcost = updateFinalCost(gift, speed, cost);
     await found.save();
     return res.json(found);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
@@ -46,8 +46,8 @@ router.post("/update_address", auth, async (req, res) => {
 
     await newDelivery.save();
     return res.json(newDelivery);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
@@ -67,8 +67,8 @@ router.post("/update_payment", auth, async (req, res) => {
     );
     if (!found) return res.json({ errorMsg: "No delivey for this user" });
     else return res.json({ found, foundUser });
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
@@ -95,8 +95,8 @@ router.get("/update_cart", auth, async (req, res) => {
     );
     if (!updated) return res.json({ errorMsg: "No such Item Found" });
     else return res.json(updated);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 }); //check again
 
@@ -105,120 +105,10 @@ router.get("/details", auth, async (req, res) => {
     const found = await Delivery.findOne({ user: req.user.id, status: false });
     if (!found) return res.json({ errorMsg: "No current delivery item" });
     else return res.json(found);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
-
-// router.post("/update_speed", auth, (req, res) => {
-//   try {
-//     Delivery.findOneAndUpdate(
-//       { user: req.user.id, status: false },
-//       { $set: req.body },
-//       { new: true },
-//       (err, found) => {
-//         if (err) return res.json(err);
-//         found.finalcost = updateFinalCost(found.gift, found.speed, found.cost);
-//         res.json(found);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ errorMsg: err.message });
-//   }
-// });
-
-// router.post("/update_address", auth, (req, res) => {
-//   try {
-//     Delivery.findOneAndUpdate(
-//       { user: req.user.id, status: false },
-//       { $set: req.body },
-//       { new: true },
-//       (err, found) => {
-//         if (err) return res.json(err);
-//         res.json(found);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ errorMsg: err.message });
-//   }
-// });
-
-// router.post("/update_payment", auth, (req, res) => {
-//   try {
-//     Delivery.findOneAndUpdate(
-//       { user: req.user.id, status: false },
-//       { $set: req.body },
-//       { new: true },
-//       (err, found) => {
-//         if (err) return res.json(err);
-//         res.json(found);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ errorMsg: err.message });
-//   }
-// });
-
-// router.post("/update_cart", auth, async (req, res) => {
-//   try {
-//     const user = await User.findOne({ _id: req.user.id });
-//     const userCart = user.cart;
-
-//     Delivery.findOneAndUpdate(
-//       { user: req.user.id, status: false },
-//       {
-//         $set: { cart: userCart },
-//       },
-//       {
-//         new: true,
-//       },
-//       (err, found) => {
-//         if (err) res.json(err);
-//         found.cost = updateCost(found.cart);
-//         found.finalcost = updateFinalCost(found.gift, found.speed, found.cost);
-//         res.json(found);
-//       }
-//     );
-//   } catch (err) {
-//     return res.json({ errorMsg: err.message });
-//   }
-// });
-
-// router.post("/create", auth, async (req, res) => {
-//   try {
-//     const docs = await Delivery.deleteMany({
-//       user: req.user.id,
-//       status: false,
-//     });
-
-//     const user = await User.findOne({ _id: req.user.id });
-//     const userCart = user.cart;
-//     const cost = updateCost(userCart);
-//     const finalcost = updateFinalCost(req.body.gift, 0, cost);
-//     const newDelivery = new Delivery({
-//       user: req.user.id,
-//       gift: req.body.gift,
-//       cart: userCart,
-//       cost: cost,
-//       finalcost: finalcost,
-//     });
-//     await newDelivery.save();
-//     res.json(newDelivery);
-//   } catch (err) {
-//     return res.json({ errorMsg: err.message });
-//   }
-// });
-
-// router.get("/details", auth, (req, res) => {
-//   try {
-//     Delivery.findOne({ user: req.user.id, status: false }, (err, found) => {
-//       if (err) res.json(err);
-//       res.json(found);
-//     });
-//   } catch (err) {
-//     return res.json({ errorMsg: err.message });
-//   }
-// });
 
 const updateCost = (cart) =>
   cart.reduce(

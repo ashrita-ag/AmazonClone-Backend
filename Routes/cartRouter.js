@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const auth = require("../Middleware/auth");
 const User = require("../Models/userModel");
-const Product = require("../Models/productModel");
 
 router.patch("/add", auth, async (req, res) => {
   try {
@@ -12,8 +11,8 @@ router.patch("/add", auth, async (req, res) => {
     );
     if (!foundUser) return res.json({ errorMsg: "No such Item Found" });
     else return res.json(foundUser.cart);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
@@ -34,22 +33,8 @@ router.patch("/update", auth, async (req, res) => {
     if (!finalCart) return res.json({ errorMsg: "No such item Found" });
 
     return res.json(finalCart.cart);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
-  }
-});
-
-router.patch("/delete_cart", auth, async (req, res) => {
-  try {
-    const foundUser = await User.findOneAndUpdate(
-      { _id: req.user.id },
-      { $set: { cart: [] } },
-      { new: true }
-    );
-    if (!foundUser) return res.json({ errorMsg: "No such User Found" });
-    else return res.json(foundUser);
-  } catch (err) {
-    return res.json({ errorMsg: err.message });
+  } catch (e) {
+    return res.json({ errorMsg: e.message });
   }
 });
 
