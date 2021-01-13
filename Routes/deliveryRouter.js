@@ -10,6 +10,7 @@ router.patch("/update_speed", auth, async (req, res) => {
       { $set: req.body },
       { new: true }
     );
+    if (!found) return res.json({ errorMsg: "No such item Found" });
 
     const { gift, speed, cost } = found;
     found.finalcost = updateFinalCost(gift, speed, cost);
@@ -57,8 +58,8 @@ router.get("/update_payment", auth, async (req, res) => {
       { $set: { status: true } },
       { new: true }
     );
-    if (found) return res.json(found);
-    else return res.json({ errorMsg: "No delivey for this user" });
+    if (!found) return res.json({ errorMsg: "No delivey for this user" });
+    else return res.json(found);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
@@ -66,12 +67,15 @@ router.get("/update_payment", auth, async (req, res) => {
 
 router.get("/update_cart", auth, async (req, res) => {
   try {
-    const userCart = await User.findOne({ _id: req.user.id }).select("cart");
+    const foundUser = await User.findOne({ _id: req.user.id });
+    if (!foundUser) return res.json({ errorMsg: "No such user Found" });
+    const userCart = foundUser.cart;
     const found = await Delivery.findOneAndUpdate(
       { user: req.user.id, status: false },
       { $set: { cart: userCart } },
       { new: true }
     );
+    if (!found) return res.json({ errorMsg: "No such Item Found" });
 
     const { cart, gift, speed } = found;
     const newCost = updateCost(cart);
@@ -82,8 +86,8 @@ router.get("/update_cart", auth, async (req, res) => {
       { $set: { cost: newCost, finalcost: newFinalCost } },
       { new: true }
     );
-
-    return res.json(updated);
+    if (!updated) return res.json({ errorMsg: "No such Item Found" });
+    else return res.json(updated);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
@@ -92,8 +96,8 @@ router.get("/update_cart", auth, async (req, res) => {
 router.get("/details", auth, async (req, res) => {
   try {
     const found = await Delivery.findOne({ user: req.user.id, status: false });
-    if (found) return res.json(found);
-    else return res.json({ errorMsg: "No current delivery item" });
+    if (!found) return res.json({ errorMsg: "No current delivery item" });
+    else return res.json(found);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }

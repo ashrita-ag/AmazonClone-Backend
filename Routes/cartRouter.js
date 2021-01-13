@@ -24,11 +24,15 @@ router.patch("/update", auth, async (req, res) => {
       { $set: { "cart.$.count": req.body.count } },
       { new: true }
     );
+    if (!foundUser) return res.json({ errorMsg: "No such item Found" });
+
     const finalCart = await User.findOneAndUpdate(
       { _id: req.user.id },
       { $pull: { cart: { count: { $lte: 0 } } } },
       { new: true }
     );
+    if (!finalCart) return res.json({ errorMsg: "No such item Found" });
+
     return res.json(finalCart.cart);
   } catch (err) {
     return res.json({ errorMsg: err.message });
@@ -42,7 +46,8 @@ router.patch("/delete_cart", auth, async (req, res) => {
       { $set: { cart: [] } },
       { new: true }
     );
-    return res.json(foundUser);
+    if (!foundUser) return res.json({ errorMsg: "No such User Found" });
+    else return res.json(foundUser);
   } catch (err) {
     return res.json({ errorMsg: err.message });
   }
