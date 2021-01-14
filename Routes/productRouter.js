@@ -6,7 +6,7 @@ router.get("/cat/:p", async (req, res) => {
     const docs = await Product.find({ category: req.params.p });
     return res.json(docs);
   } catch (e) {
-    res.json({ errorMsg: e });
+    res.json({ errorMsg: e.message });
   }
 });
 
@@ -16,8 +16,19 @@ router.get("/detail/:p", async (req, res) => {
     if (found) return res.json(found);
     else return res.json({ errorMsg: "No such product exists" });
   } catch (e) {
-    res.json({ errorMsg: e });
+    res.json({ errorMsg: e.message });
   }
 });
 
+router.post("/search", async (req, res) => {
+  try {
+    const searchItem = req.body.searchItem;
+    const found = await Product.find({
+      title: { $regex: searchItem, $options: "xi" },
+    });
+    return res.json(found);
+  } catch (e) {
+    res.json({ errorMsg: e.message });
+  }
+});
 module.exports = router;

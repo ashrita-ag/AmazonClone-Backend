@@ -20,7 +20,7 @@ router.post("/create-payment-intent", auth, async (req, res) => {
       paymentIntent: paymentIntent,
     });
   } catch (e) {
-    res.json({ errorMsg: e });
+    res.json({ errorMsg: e.message });
   }
 });
 
