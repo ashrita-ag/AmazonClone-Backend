@@ -15,6 +15,4 @@ const Product = mongoose.model("Product", productSchema);
 // Product.insertMany(data.productsNew, (err) => console.log(err));
 // Product.insertMany(data.productsAdd, (err) => console.log(err));
 
-
-
 module.exports = Product;
