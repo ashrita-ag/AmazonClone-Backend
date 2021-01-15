@@ -23,8 +23,9 @@ router.get("/detail/:p", async (req, res) => {
 router.post("/search", async (req, res) => {
   try {
     const searchItem = req.body.searchItem;
+    const trimmed = searchItem.trim();
     const found = await Product.find({
-      title: { $regex: searchItem, $options: "xi" },
+      title: { $regex: trimmed, $options: "i" },
     });
     return res.json(found);
   } catch (e) {
