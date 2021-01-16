@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,6 @@ app.use("/delivery", require("./Routes/deliveryRouter"));
 app.use("/checkout", require("./Routes/checkoutRouter"));
 app.use("/order", require("./Routes/orderHistoryRouter"));
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(PORT, () => {
   console.log("Backend Running on port " + PORT);
 });
