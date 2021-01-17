@@ -28,6 +28,8 @@ router.post("/register", async (req, res) => {
     const accesstoken = createAccessToken({ id: newUser._id });
     const refreshtoken = createRefreshToken({ id: newUser._id });
 
+    localStorage.setItem("refreshtoken", refreshtoken);
+
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
       path: "/user/token",
@@ -51,6 +53,8 @@ router.post("/login", async (req, res) => {
 
     const accesstoken = createAccessToken({ id: user._id });
     const refreshtoken = createRefreshToken({ id: user._id });
+
+    localStorage.setItem("refreshtoken", refreshtoken);
 
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
@@ -77,7 +81,8 @@ router.get("/info", auth, async (req, res) => {
 
 router.get("/token", (req, res) => {
   try {
-    const rf_token = req.cookies.refreshtoken;
+    // const rf_token = req.cookies.refreshtoken;
+    const rf_token = localStorage.getItem("refreshtoken");
     if (!rf_token) return res.json({ errorMsg: "Please Login or register" });
 
     jwt.verify(rf_token, process.env.REFRESH_TOKEN, (e, user) => {
@@ -93,6 +98,7 @@ router.get("/token", (req, res) => {
 
 router.get("/logout", (_, res) => {
   try {
+    localStorage.removeItem("refreshtoken");
     res.clearCookie("refreshtoken", { path: "/user/token" });
     return res.json({ msg: "logout success" });
   } catch (e) {
