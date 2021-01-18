@@ -4,7 +4,7 @@ const User = require("../Models/userModel");
 const jwt = require("jsonwebtoken");
 const auth = require("../Middleware/auth");
 
-const URL = process.env.NODE_ENV == "development" ? "/api/" : "/";
+// const URL = process.env.NODE_ENV == "development" ? "/api/" : "/";
 
 router.post("/register", async (req, res) => {
   try {
