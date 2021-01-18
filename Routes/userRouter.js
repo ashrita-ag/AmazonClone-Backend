@@ -30,7 +30,7 @@ router.post("/register", async (req, res) => {
 
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
-      path: "/user/token",
+      path: "/api/user/token",
       sameSite: "none",
       secure: true,
     });
@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
 
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
-      path: "/user/token",
+      path: "/api/user/token",
       sameSite: "none",
       secure: true,
     });
@@ -94,7 +94,7 @@ router.get("/token", (req, res) => {
 
 router.get("/logout", (_, res) => {
   try {
-    res.clearCookie("refreshtoken", { path: "/user/token" });
+    res.clearCookie("refreshtoken", { path: "/api/user/token" });
     return res.json({ msg: "logout success" });
   } catch (e) {
     return res.json({ errorMsg: e.message });
