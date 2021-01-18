@@ -31,7 +31,8 @@ router.post("/register", async (req, res) => {
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
       path: "/user/token",
-      domain: "amazon-clone-by-ashrita.herokuapp.com"
+      sameSite: "none",
+      secure: true,
     });
 
     return res.json({ accesstoken });
