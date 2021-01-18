@@ -4,6 +4,8 @@ const User = require("../Models/userModel");
 const jwt = require("jsonwebtoken");
 const auth = require("../Middleware/auth");
 
+const URL = process.env.NODE_ENV == "development" ? "/api/" : "/";
+
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -30,7 +32,7 @@ router.post("/register", async (req, res) => {
 
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
-      path: "/user/token",
+      path: `${URL}user/token`,
     });
 
     return res.json({ accesstoken });
@@ -53,7 +55,7 @@ router.post("/login", async (req, res) => {
 
     res.cookie("refreshtoken", refreshtoken, {
       httpOnly: false,
-      path: "/user/token",
+      path: `${URL}user/token`,
     });
 
     return res.json({ accesstoken, id: user._id });
@@ -90,7 +92,7 @@ router.get("/token", (req, res) => {
 
 router.get("/logout", (_, res) => {
   try {
-    res.clearCookie("refreshtoken", { path: "/user/token" });
+    res.clearCookie("refreshtoken", { path: `${URL}user/token` });
     return res.json({ msg: "logout success" });
   } catch (e) {
     return res.json({ errorMsg: e.message });

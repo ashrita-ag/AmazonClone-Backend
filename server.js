@@ -29,13 +29,15 @@ mongoose.connect(
   }
 );
 
-app.use("/user", require("./Routes/userRouter"));
-app.use("/product", require("./Routes/productRouter"));
-app.use("/user/cart", require("./Routes/cartRouter"));
-app.use("/address", require("./Routes/addressRouter"));
-app.use("/delivery", require("./Routes/deliveryRouter"));
-app.use("/checkout", require("./Routes/checkoutRouter"));
-app.use("/order", require("./Routes/orderHistoryRouter"));
+const URL = process.env.NODE_ENV == "development" ? "/api/" : "/";
+
+app.use(`${URL}user`, require("./Routes/userRouter"));
+app.use(`${URL}product`, require("./Routes/productRouter"));
+app.use(`${URL}user/cart`, require("./Routes/cartRouter"));
+app.use(`${URL}address`, require("./Routes/addressRouter"));
+app.use(`${URL}delivery`, require("./Routes/deliveryRouter"));
+app.use(`${URL}checkout`, require("./Routes/checkoutRouter"));
+app.use(`${URL}order`, require("./Routes/orderHistoryRouter"));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
