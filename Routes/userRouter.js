@@ -30,12 +30,12 @@ router.post("/register", async (req, res) => {
     const accesstoken = createAccessToken({ id: newUser._id });
     const refreshtoken = createRefreshToken({ id: newUser._id });
 
-    res.cookie("refreshtoken", refreshtoken, {
-      httpOnly: false,
-      path: `${URL}user/token`,
-    });
+    // res.cookie("refreshtoken", refreshtoken, {
+    //   httpOnly: false,
+    //   path: `${URL}user/token`,
+    // });
 
-    return res.json({ accesstoken });
+    return res.json({ accesstoken,refreshtoken });
   } catch (e) {
     return res.json({ errorMsg: e.message });
   }
@@ -53,12 +53,12 @@ router.post("/login", async (req, res) => {
     const accesstoken = createAccessToken({ id: user._id });
     const refreshtoken = createRefreshToken({ id: user._id });
 
-    res.cookie("refreshtoken", refreshtoken, {
-      httpOnly: false,
-      path: `${URL}user/token`,
-    });
+    // res.cookie("refreshtoken", refreshtoken, {
+    //   httpOnly: false,
+    //   path: `${URL}user/token`,
+    // });
 
-    return res.json({ accesstoken, id: user._id });
+    return res.json({ accesstoken, refreshtoken });
   } catch (e) {
     return res.json({ errorMsg: e.message });
   }
@@ -74,9 +74,10 @@ router.get("/info", auth, async (req, res) => {
   }
 });
 
-router.get("/token", (req, res) => {
+router.post("/token", (req, res) => {
   try {
-    const rf_token = req.cookies.refreshtoken;
+    const rf_token = req.body.refreshtoken;
+    // const rf_token = req.cookies.refreshtoken;
     if (!rf_token) return res.json({ errorMsg: "Please Login or register" });
 
     jwt.verify(rf_token, process.env.REFRESH_TOKEN, (e, user) => {
@@ -90,14 +91,14 @@ router.get("/token", (req, res) => {
   }
 });
 
-router.get("/logout", (_, res) => {
-  try {
-    res.clearCookie("refreshtoken", { path: `${URL}user/token` });
-    return res.json({ msg: "logout success" });
-  } catch (e) {
-    return res.json({ errorMsg: e.message });
-  }
-});
+// router.get("/logout", (_, res) => {
+//   try {
+//     res.clearCookie("refreshtoken", { path: `${URL}user/token` });
+//     return res.json({ msg: "logout success" });
+//   } catch (e) {
+//     return res.json({ errorMsg: e.message });
+//   }
+// });
 
 const createAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1d" });
