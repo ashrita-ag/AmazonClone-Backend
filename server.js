@@ -37,7 +37,7 @@ app.use("/delivery", require("./Routes/deliveryRouter"));
 app.use("/checkout", require("./Routes/checkoutRouter"));
 app.use("/order", require("./Routes/orderHistoryRouter"));
 
-const PORT = process.env.BPORT || 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("Backend Running on port " + PORT);
 });
